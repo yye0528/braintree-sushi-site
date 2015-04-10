@@ -165,6 +165,7 @@ var layout = new kendo.Layout("layout-template", { model: layoutModel });
 var cartPreview = new kendo.Layout("cart-preview-template", { model: cartPreviewModel });
 var index = new kendo.View("index-template", { model: indexModel });
 var checkout = new kendo.View("checkout-template", {model: cartPreviewModel });
+var payment = new kendo.View("payment-template", {model: cartPreviewModel });
 var detail = new kendo.View("detail-template", { model: detailModel });
 
 var sushi = new kendo.Router({
@@ -187,6 +188,20 @@ sushi.route("/", function() {
 sushi.route("/checkout", function() {
     viewingDetail = false;
     layout.showIn("#content", checkout);
+    cartPreview.hide();
+
+    console.log('brainTreeToken', brainTreeToken)
+    if (!braintree.initialized) {
+        braintree.setup(brainTreeToken, 'dropin', {
+            container: "bt-dropin"
+        });
+        braintree.initialized = true;
+    }
+});
+
+sushi.route("/payment", function() {
+    viewingDetail = false;
+    layout.showIn("#content", payment);
     cartPreview.hide();
 });
 

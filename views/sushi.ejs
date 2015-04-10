@@ -3,6 +3,7 @@
 <head>
     <title>Sushi</title>
     <meta charset="utf-8">
+    <!-- <link href="css/bootstrap-lumen-theme.min.css" rel="stylesheet"> -->
     <link href="http://cdn.kendostatic.com/2014.2.716/styles/kendo.common.min.css" rel="stylesheet">
     <link href="http://cdn.kendostatic.com/2014.2.716/styles/kendo.rtl.min.css" rel="stylesheet">
     <link href="http://cdn.kendostatic.com/2014.2.716/styles/kendo.default.min.css" rel="stylesheet">
@@ -74,10 +75,32 @@
 					</tbody>
 				</table>
 				<p id="total-checkout"><em>total:</em><span data-bind="text: totalPrice"></span></p>
-				<a class="cancel-order" href="#" data-bind="click: emptyCart">cancel order</a><button class="order-now" data-bind="click: proceed">order now!</button>
+                <div id="bt-payment-container">
+                    <form id="bt-checkout" method="post" action="/transactions">
+                        <div id="bt-dropin"></div>
+                        <input type="hidden" name="totalPrice" data-bind="value: totalPrice" />
+                        <button type="submit" class="order-now">Place Order</button>
+                    </form>
+                </div>
+				<a class="cancel-order" href="#" data-bind="click: emptyCart">cancel order</a>
 			</div>
 
 			<div id="checkout-bottom-image"></div>
+        </script>
+
+        <script type="text/x-kendo-template" id="payment-template">
+            <div id="checkout-top-image"></div>
+
+            <div id="bt-payment-container">
+                <p id="total-checkout"><em>total:</em><span data-bind="text: totalPrice"></span></p>
+                <form id="bt-checkout" method="post" action="/transactions">
+                    <div id="bt-dropin"></div>
+                    <input type="hidden" name="totalPrice" data-bind="value: totalPrice" />
+                    <button type="submit" class="order-now">Place Order</button>
+                </form>
+            </div>
+
+            <div id="checkout-bottom-image"></div>
         </script>
 
         <script type="text/x-kendo-template" id="detail-template">
@@ -149,14 +172,8 @@
 
         <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
         <script>
-        braintree.setup(<%= token %>, 'dropin', {
-            container: "checkout",
-            paypal: {
-                singleUse: true,
-                amount: 10.00,
-                currency: 'USD'
-            }
-        });
+            var brainTreeToken = brainTreeToken || "<%= token %>";
+
         </script>
 
 </body>
